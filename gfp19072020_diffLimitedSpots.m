@@ -19,6 +19,7 @@ load Feq_775nm.mat
 load Fholo_775nm.mat
 load Fscan_775nm.mat
 
+
 Vscan837nm = 5.21;
 Vholo1040nm = 34.33;
 Veq837nm = 24.69;
@@ -36,6 +37,8 @@ CtauEQ=   1/tauEQ;%CtauHOLO*tauHOLO/tauEQ;
 startIndex = 1;
 endIndex = 10;
 
+Pholo_wavshifted_spot_withoutZorder = sqrt(0.75286)*Pholo_wavshifted
+
 %% 837nm
 % Fscan_837nm_th = @(x) CtauSCAN*x(1)*(Pscan_wavshifted)^2*Vscan837nm;
 % FminSCAN_837nm = @(x) Fscan_837nm_th(x)-Fscan_837nm; 
@@ -47,15 +50,18 @@ endIndex = 10;
 % x = lsqnonlin(FminSCAN_837nm,x0,xmin,xmax);
 % sigSCAN_837nm = x(1);
 
+Fholo_837nm_withoutZorder = 0.75286*Fholo_837nm;
+
+
 % fit scan 
 [Fscan_theorique837nm,sigSCAN837nm]=FitSCAN(Pscan_wavshifted,Vscan837nm,Fscan_837nm,CtauSCAN)
 
 
 % fit holo
-[Fholo_theorique837nm,sigHOLO837,offset837]=FitHOLO_fitEQ(Pholo_wavshifted,Fholo_837nm,Vholo1040nm, startIndex, endIndex,CtauHOLO)
+[Fholo_theorique837nm,sigHOLO837,offset837]=FitHOLO_fitEQ(Pholo_wavshifted_spot_withoutZorder,Fholo_837nm_withoutZorder,Vholo1040nm, startIndex, endIndex,CtauHOLO)
 
 % fit Eq
-[Feq_theorique837nm,sigEQ837nm]=FitEQ(startIndex,endIndex,Pscan_wavshifted,Pholo_wavshifted,Veq837nm,Feq_837nm,CtauEQ)
+[Feq_theorique837nm,sigEQ837nm]=FitEQ(startIndex,endIndex,Pscan_wavshifted,Pholo_wavshifted_spot_withoutZorder,Veq837nm,Feq_837nm,CtauEQ)
 
 %% 800nm
 % fit scan
